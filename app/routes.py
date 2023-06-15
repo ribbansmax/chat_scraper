@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 from flask import Flask, request
 import requests
 import pdb
+from dotenv import load_dotenv
+load_dotenv()
 
 @app.route('/')
 @app.route('/index')
