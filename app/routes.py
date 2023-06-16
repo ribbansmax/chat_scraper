@@ -1,8 +1,7 @@
 from app import app
 from app.wcia_web_scraper import wcia
 from bs4 import BeautifulSoup
-from flask import Flask, request
-# import pdb
+from flask import Flask
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
