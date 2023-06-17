@@ -16,7 +16,7 @@ def extract_article_links(page_content):
 
 def get_article_summary(url, text):
     messages=[
-      {"role": "system", "content": "You are a helpful assistant. Summarize the following messages succinctly if they are interesting. Weather is interesting, but keep it very short. Petty crime, local sports, and primary through high-school news is not interesting. Respond exactly with 'Not interesting.' if the news is not interesting"},
+      {"role": "system", "content": "You are a helpful assistant. Summarize the following messages succinctly if they are interesting. Weather is interesting, but keep it very short. Petty crime, local sports, and primary through high-school news is not interesting. Respond exactly with 'In other news.' if the news is not interesting"},
       {"role": "user", "content": text}
     ]
 
@@ -34,7 +34,7 @@ def split_article_texts(article_texts):
     interesting_texts = []
     not_interesting_texts = []
     for url, summary in article_texts.items():
-        if summary != 'Not interesting.':
+        if summary != 'In other news.':
             interesting_texts.append((url, summary))
         else:
             not_interesting_texts.append((url, summary))
