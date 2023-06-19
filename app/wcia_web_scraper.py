@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from app import cache
 import requests
 from dotenv import load_dotenv
 import os
@@ -14,7 +15,9 @@ def extract_article_links(page_content):
     print(len(article_links))
     return article_links
 
+@cache.memoize(timeout=21600, make_name=lambda url: url)
 def get_article_summary(url, text):
+    print('.')
     messages=[
       {"role": "system", "content": "You are a helpful assistant. Summarize the following messages succinctly if they are interesting. Weather is interesting, but keep it very short. Petty crime, local sports, and primary through high-school news is not interesting. Respond exactly with 'In other news.' if the news is not interesting"},
       {"role": "user", "content": text}
@@ -39,7 +42,6 @@ def split_article_texts(article_texts):
         else:
             not_interesting_texts.append((url, summary))
     return interesting_texts, not_interesting_texts
-
 
 def wcia():
     current_time = datetime.now()
@@ -141,6 +143,9 @@ def wcia():
                     </div>
                 </div>
             </body>
+            <footer>
+                <p>Visit our <a href="https://github.com/ribbansmax/chat_scraper">GitHub repository</a> for more information.</p>
+            </footer>
             </html>
         """
 
