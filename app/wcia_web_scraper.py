@@ -1,9 +1,10 @@
 from bs4 import BeautifulSoup
+from app import cache
 import requests
 from dotenv import load_dotenv
 import os
 import openai
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 load_dotenv()
 
 def extract_article_links(page_content):
@@ -11,9 +12,9 @@ def extract_article_links(page_content):
     articles = soup.find_all("a", class_="article-list__gradient-link")
     article_links = list(set(filter(None, [link.get('href') for link in articles])))
     article_links = list(filter(lambda link: link and 'https://www.wcia.com/ciliving-tv' not in link, article_links))
-    print(len(article_links))
     return article_links
 
+@cache.memoize(timeout=21600, make_name=lambda url: url)
 def get_article_summary(url, text):
     messages=[
       {"role": "system", "content": "You are a helpful assistant. Summarize the following messages succinctly if they are interesting. Weather is interesting, but keep it very short. Petty crime, local sports, and primary through high-school news is not interesting. Respond exactly with 'In other news.' if the news is not interesting"},
@@ -40,6 +41,23 @@ def split_article_texts(article_texts):
             not_interesting_texts.append((url, summary))
     return interesting_texts, not_interesting_texts
 
+def watsons_at_riggs():
+    try:
+        RIGGS_URL = "https://www.riggsbeer.com/calendar/"
+        today = date.today()
+        response = requests.get(RIGGS_URL)
+        html = response.text
+
+        soup = BeautifulSoup(html, "html.parser")
+        div_id = f"mec-calendar-events-sec-454-{today.strftime('%Y%m%d')}"
+        event_div = soup.find("div", {"id": div_id})
+
+        text_to_search = "Watson’s Chicken"
+        results = event_div.find_all(text=text_to_search)
+
+        return len(results) > 0
+    except:
+        return False
 
 def wcia():
     current_time = datetime.now()
@@ -88,6 +106,14 @@ def wcia():
         response_string_column2 = ""
         for url, summary in column2 + second_half:
             response_string_column2 += f"<p><a href='{url}'>{summary}</a></p>"
+        
+        watsons = f"""
+            <body>
+                <h1>Watsons is at Riggs today</h1>
+            </body>""" if watsons_at_riggs() else f"""
+            <body>
+                <div>Watsons is not at Riggs today</div>
+            </body>"""
 
         html_template = f"""
             <html>
@@ -141,6 +167,10 @@ def wcia():
                     </div>
                 </div>
             </body>
+            {watsons}
+            <footer>
+                <p>Visit our <a href="https://github.com/ribbansmax/chat_scraper">GitHub repository</a> for more information.</p>
+            </footer>
             </html>
         """
 

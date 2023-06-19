@@ -11,6 +11,6 @@ from datetime import datetime, timedelta
 def index():
     return "hello world"
 @app.route('/wcia')
-@cache.cached(timeout=21600)
+
 def wcia_route():
     return wcia()
