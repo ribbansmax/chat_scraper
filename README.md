@@ -14,7 +14,7 @@ Install with pip:
 $ pip install -r requirements.txt
 ```
 
-Get a Ghat_GPT api key from [openai](https://platform.openai.com/overview)
+Get a Chat GPT api key from [openai](https://platform.openai.com/overview)
 Place your api key in a `.env` file as `API_KEY=<your_key_here>`
 
 
