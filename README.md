@@ -20,6 +20,4 @@ Place your api key in a `.env` file as `API_KEY=<your_key_here>`
 
 ## License
 
-The last section of a high-quality README file is the license. This lets other developers know what they can and cannot do with your project. If you need help choosing a license, refer to [https://choosealicense.com/](https://choosealicense.com/).
-
-
+This project is developed with the MIT license
