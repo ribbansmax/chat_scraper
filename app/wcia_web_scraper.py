@@ -24,7 +24,7 @@ def get_article_summary(url, text):
     openai.api_key = os.getenv("API_KEY")
 
     completion = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
+    model="gpt-3.5-turbo-16k",
     messages=messages
     )
     for response in completion.choices:
